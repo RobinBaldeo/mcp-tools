@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -c \"import mcp; print\\(mcp.__version__\\)\")",
+      "Bash(pip list:*)",
+      "Bash(where python:*)",
+      "Bash(python -c ':*)",
+      "mcp__mcp-bridge__ping",
+      "mcp__mcp-bridge__receive",
+      "Bash(curl -s http://localhost:8080/mcp)",
+      "Bash(curl -s http://localhost:8080/)",
+      "Bash(curl:*)",
+      "mcp__mcp-bridge__clipboard_receive",
+      "mcp__mcp-bridge__clipboard_send",
+      "mcp__mcp-bridge__prompt_check"
+    ]
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "mcp-bridge"
+  ]
+}

@@ -1,0 +1,16 @@
+# Core LangGraph + Grok (structured output)
+langgraph==1.1.6
+langchain-xai==1.2.2
+langchain-core==1.2.26
+pydantic==2.12.5
+
+# Your other packages (updated slightly for better compatibility)
+mcp[cli]==1.9.2
+python-dotenv==1.1.0
+pyyaml==6.0.2
+httpx==0.28.1
+structlog==25.1.0
+uvicorn==0.34.2
+
+# Force a version of asyncpg that has pre-built Windows wheels
+asyncpg==0.31.0

@@ -1,0 +1,14 @@
+server:
+  name: mcp-bridge
+  version: 0.1.0
+  description: MCP bridge server for Claude Code and Claude.ai
+
+endpoints:
+  # postgres_url: postgresql://user:pass@host:5432/db
+  # redis_url: redis://host:6379
+
+features:
+  debug: false
+
+grok:
+  model: grok-4-1-fast-non-reasoning

@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "mcp-bridge": {
+      "type": "http",
+      "url": "https://mcp-bridge-project-production.up.railway.app/mcp/"
+    }
+  }
+}
