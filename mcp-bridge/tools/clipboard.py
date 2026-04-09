@@ -13,7 +13,7 @@ def register(mcp):
 
         Args:
             content: The text content to store.
-            source: Origin identifier — one of claude_code, claude_ui, claude_desktop.
+            source: Origin identifier — one of claude_code, claude_ui, chatgpt_ui
             metadata: Optional JSON metadata dict.
         """
         from utils.db import get_pool

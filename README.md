@@ -148,6 +148,42 @@ The auto-discovery in `tools/__init__.py` picks it up automatically — no regis
 - **PyYAML + python-dotenv** — configuration
 - **Starlette + Uvicorn** — ASGI server
 
-## License
+## Current Limitations
 
-MIT
+This is a working prototype with known gaps:
+
+- No authentication or access control — any client with the URL can read/write
+- No rate limiting or abuse protection
+- Minimal input validation beyond type checks
+- No test suite
+- Clipboard is a shared global namespace (no multi-user isolation)
+
+**Do not expose the Railway URL publicly without adding an auth layer.**
+
+## Security Notes
+
+The bridge currently:
+
+- Trusts all incoming requests
+- Allows read/write access to shared clipboard state
+- Exposes operational metadata via `ping()`
+
+If you extend this, consider adding:
+
+- API key authentication (header-based)
+- Per-source scoped write permissions
+- Rate limiting (e.g. via Railway or a middleware layer)
+- Input sanitization on `content` and `metadata` fields
+
+## Future Ideas
+
+- Authentication layer (API keys or OAuth)
+- Multi-user isolation (scoped namespaces per user/project)
+- Tool permissions / sandboxing
+- Structured prompt analysis with richer Grok feedback
+- Logging and observability dashboard
+- TTL / expiry on clipboard messages
+- WebSocket support for real-time sync across environments
+- Token consumption tracking per session/source (how much context is being moved across environments)
+- Grok effectiveness metrics — track `fuzzy`/`partial`/`very_clear` rates over time to measure prompt quality trends
+- Prompt refinement analytics — how many Grok iterations before a prompt passes, and what types of issues recur
