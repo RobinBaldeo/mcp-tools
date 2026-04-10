@@ -7,6 +7,11 @@ logger = structlog.get_logger()
 
 _pool: asyncpg.Pool | None = None
 
+
+
+
+
+
 _CREATE_TABLE = """
 CREATE TABLE IF NOT EXISTS mcp_clipboard (
     id SERIAL PRIMARY KEY,

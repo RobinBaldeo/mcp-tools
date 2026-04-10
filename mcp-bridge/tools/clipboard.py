@@ -1,8 +1,16 @@
 import json
+from typing import Literal
 
 import structlog
+from pydantic import BaseModel, ValidationError
 
 logger = structlog.get_logger()
+
+
+class ClipboardMessage(BaseModel):
+    content: str
+    source: Literal["claude_ui", "claude_code", "chatgpt", "grok", "user_note"]
+    metadata: dict | None = None
 
 
 def register(mcp):
@@ -12,14 +20,31 @@ def register(mcp):
         """Insert a message into the MCP clipboard.
 
         Args:
-            content: The text content to store.
-            source: Origin identifier — one of claude_code, claude_ui, chatgpt_ui
-            metadata: Optional JSON metadata dict.
-        """
-        from utils.db import get_pool
+            content:  The text content to store. Required.
 
-        if metadata is None:
-            metadata = {}
+            source:   Who is sending this message. Must be one of:
+                        - "claude_ui"    → Claude.ai web/mobile chat
+                        - "claude_code"  → Claude Code (PyCharm / CLI)
+                        - "chatgpt"      → ChatGPT (any interface)
+                        - "grok"         → Grok (xAI)
+                        - "user_note"    → Human-authored note or draft (not an AI response)
+
+                      Use "user_note" any time YOU are writing the content,
+                      even if you're saving it via Claude.ai. This prevents
+                      AI responses and human drafts from being confused.
+
+            metadata: Optional JSON dict for tagging. Suggested keys:
+                        - "type"    e.g. "investigation_findings", "draft_prompt", "resume_extract"
+                        - "topic"   short subject label
+                        - "status"  e.g. "complete", "in_progress", "shelved"
+        """
+        try:
+            msg = ClipboardMessage(content=content, source=source, metadata=metadata)
+        except ValidationError as e:
+            logger.warning("clipboard_send_validation_failed", error=str(e))
+            return {"error": f"Validation failed: {e}"}
+
+        from utils.db import get_pool
 
         try:
             pool = await get_pool()
@@ -30,9 +55,9 @@ def register(mcp):
         row = await pool.fetchrow(
             "INSERT INTO mcp_clipboard (source, content, metadata) "
             "VALUES ($1, $2, $3::jsonb) RETURNING id, source, created_at",
-            source,
-            content,
-            json.dumps(metadata),
+            msg.source,
+            msg.content,
+            json.dumps(msg.metadata or {}),
         )
         logger.info("clipboard_send", id=row["id"], source=source)
         return {
